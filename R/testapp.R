@@ -32,9 +32,9 @@ testapp = function() {
   
   #setup needed for the igvShiny table.
   #-----------------------------------------------------------------------------------
-  if(!dir.exists("tracks"))
-    dir.create("tracks")
-  shiny::addResourcePath("tracks", "tracks")
+ # if(!dir.exists("tracks"))
+    #dir.create("tracks")
+ # shiny::addResourcePath("tracks", "tracks")
   #-------------------------------------------------------------------------------------
   
   # simple UI based on selections
@@ -62,13 +62,13 @@ testapp = function() {
         actionButton("graphGWAS", "Graph GWAS"), 
         actionButton("stop", "stop app"),
         width=2
-      ),
+      ), #sidebarPanel 
       mainPanel(
         tabPanel("igvShiny",igvShiny::igvShinyOutput("igvShiny_0")),
         uiOutput("all")
-      )
-    )
-  )
+      ) # mainPanel
+    ) #sidebarLayout
+  ) #fluidepage
   
   server = function(input, output, session) {
     updateSelectizeInput(session, 'gene', choices = ensg, server = TRUE)
@@ -96,9 +96,13 @@ testapp = function() {
       
       dat = resl[["lung"]]@tbl |> dplyr::filter(seqnames == as.character(local(6))) |>
         head(10000) |> as.data.frame() 
-      gwasTrack = makeGWASTrack( dat = dat)
+      gwasTrack = makeGWASTrack( dat = dat) 
+      print("--gwasTrack")
+      print(typeof(gwasTrack))
       print("made it to input$focus == chr")
-      display(gwasTrack, session, id = "igvShiny_0")
+      showGenomicRegion(session, id="igvShiny_0", "chr19:45,248,108-45,564,645")
+      loadGwasTrack(session, id="igvShiny_0", trackName="gwas", tbl.gwas = dat, deleteTracksOfSameName=FALSE)
+     # igvShiny::display(gwasTrack, session, id = "igvShiny_0")
       
       
     })#observeEvent
