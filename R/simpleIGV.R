@@ -55,7 +55,9 @@ lungpa = fo
 con = DBI::dbConnect(duckdb::duckdb())
 lu = GTExresource(con, tisstag="lung", pfile=lungpa)
 mydat = lu@tbl |> head(50) |> as.data.frame()
-
+min = format(min(mydat$start),  big.mark = ",", scientific = FALSE)
+max = format(max(mydat$start),  big.mark = ",", scientific = FALSE)
+chrom = paste0("chr", mydat$seqnames, sep = "" )
 #
 # rename the columns of mydat appropriately so that they agree with tbl.gwas
 #
@@ -67,6 +69,7 @@ mydat = lu@tbl |> head(50) |> as.data.frame()
     #this sprintf function do not work but the code does make it here. 
     sprintf("---- addGWASTrack")
     sprintf("current working directory: %s", getwd())
+    region = paste0(chrom, ":",min,  "-", max,  sep = "")
     showGenomicRegion(session, id="igvShiny_0", "chr19:45,248,108-45,564,645")
     loadGwasTrack(session, id="igvShiny_0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
   })
