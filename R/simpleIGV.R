@@ -70,7 +70,7 @@ chrom = paste0("chr", mydat$seqnames, sep = "" )
     sprintf("---- addGWASTrack")
     sprintf("current working directory: %s", getwd())
     region = paste0(chrom, ":",min,  "-", max,  sep = "")
-    showGenomicRegion(session, id="igvShiny_0", "chr19:45,248,108-45,564,645")
+    showGenomicRegion(session, id="igvShiny_0", region)
     loadGwasTrack(session, id="igvShiny_0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
   })
  output$igvShiny_0 <- renderIgvShiny({
