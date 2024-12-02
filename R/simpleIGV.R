@@ -30,7 +30,8 @@ ui = shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       helpText("testing"),
-      
+      #selectizeInput("chrom", "Chromosome", choices=c(1:23)),
+     #selectizeInput("", "Chromosome", choices=c(1:23)),
       br(),
       actionButton("addGwasTrackButton", "Add GWAS Track"),
       
@@ -54,11 +55,11 @@ fo = ggi_gtex_cache("lungpl05.parquet")
 lungpa = fo
 con = DBI::dbConnect(duckdb::duckdb())
 lu = GTExresource(con, tisstag="lung", pfile=lungpa)
-mydat = lu@tbl |> head(50) |> as.data.frame()
+mydat = lu@tbl |> head(100) |> as.data.frame()
 min = format(min(mydat$start),  big.mark = ",", scientific = FALSE)
 max = format(max(mydat$start),  big.mark = ",", scientific = FALSE)
-chrom = paste0("chr", mydat$seqnames, sep = "" )
-#
+#chrom = paste0("chr", mydat$seqnames, sep = "" )
+chrom = paste0("chr", 5, sep = "" )
 # rename the columns of mydat appropriately so that they agree with tbl.gwas
 #
 
@@ -70,6 +71,7 @@ chrom = paste0("chr", mydat$seqnames, sep = "" )
     sprintf("---- addGWASTrack")
     sprintf("current working directory: %s", getwd())
     region = paste0(chrom, ":",min,  "-", max,  sep = "")
+    print(region)
     showGenomicRegion(session, id="igvShiny_0", region)
     loadGwasTrack(session, id="igvShiny_0", trackName="gwas", tbl=tbl.gwas, deleteTracksOfSameName=FALSE)
   })
